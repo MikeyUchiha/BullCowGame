@@ -1,5 +1,9 @@
+#pragma once
+
 #include "FBullCowGame.h"
 #include <map>
+
+// to make syntax Unreal friendly
 #define TMap std::map
 
 FBullCowGame::FBullCowGame()
@@ -50,7 +54,7 @@ EGuessStatus FBullCowGame::CheckGuessValidity(FString Guess) const
 
 void FBullCowGame::Reset()
 {
-	const FString HIDDEN_WORD = "planet";
+	const FString HIDDEN_WORD = "planet"; // this MUST be an isogram
 	MyHiddenWord = HIDDEN_WORD;
 	MyCurrentTry = 1;
 	bGameIsWon = false;
@@ -101,33 +105,34 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 
 bool FBullCowGame::IsIsogram(FString Word) const
 {
+	// treat 0 and 1 letter words as isograms
 	if (Word.length() <= 1)
 	{
 		return true;
 	}
 
-	TMap<char, bool> LetterSeen;
-	for (auto Letter : Word)
+	TMap<char, bool> LetterSeen; // setup map
+	for (auto Letter : Word) // for all letters in the word
 	{
-		Letter = tolower(Letter);
-		if (LetterSeen[Letter])
+		Letter = tolower(Letter); // handle mixed case
+		if (LetterSeen[Letter]) // if the letter is in the map
 		{
-			return false;
+			return false; // we do NOT have an isogram
 		}
 		else
 		{
-			LetterSeen[Letter] = true;
+			LetterSeen[Letter] = true; // add the letter to the map
 		}
 	}
 
-	return true;
+	return true; // for example in cases where /0 is entered
 }
 
 bool FBullCowGame::IsLowercase(FString Word) const
 {
 	for (auto Letter : Word)
 	{
-		if (!islower(Letter))
+		if (!islower(Letter)) // if not a lowercase letter
 		{
 			return false;
 		}
